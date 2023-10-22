@@ -159,9 +159,60 @@ Služba
 
 ## inštalácia NodeJS
 
+```
+$ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+$ nano nodesource_setup.sh
+# sudo bash nodesource_setup.sh
+# sudo apt install nodejs
+```
+
+Yarn
+```
+curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt update && sudo apt install yarn
+```
+
+Možnosť 2:
+
 Inštalačný skript nájsť na `snapcraft.io/node`
 ```
 # sudo snap install node --classic
+```
+
+Možnosť 3:
+
+Stiahnutie a importovanie kľúča
+```
+# sudo apt-get update
+# sudo apt-get install -y ca-certificates curl gnupg
+# sudo mkdir -p /etc/apt/keyrings
+$ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+```
+
+Vytvorenie repozitára
+```
+NODE_MAJOR=20
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+```
+
+Stiahnutie `nodejs`
+```
+# sudo apt-get update
+# sudo apt-get install nodejs -y
+```
+
+Odstránenie
+```
+# sudo apt-get purge nodejs &&\
+rm -r /etc/apt/sources.list.d/nodesource.list &&\
+rm -r /etc/apt/keyrings/nodesource.gpg
+```
+
+Odinštalovanie
+```
+# sudo snap remove node
+# sudo apt remove nodejs -y
 ```
 
 ## inštalácia Git
@@ -208,6 +259,7 @@ $ git clone git@github.com:<user>/<repository>.git
 Inštalácia `node_modules`
 ```
 $ npm install
+$ yarn install
 ```
 
 Vytvorenie `.env`
@@ -215,4 +267,54 @@ Vytvorenie `.env`
 $ cp .env.example .env
 $ nano .env
 // upraviť premenné a CTRL + O uložiť, CTRL + X zatvoriť
+```
+
+Skompilovanie
+```
+$ npm run build
+$ yarn build
+```
+
+## inštalácia PM2
+
+```
+# sudo npm install -g pm2 
+```
+
+Nastavenie služby
+```
+# sudo pm2 startup
+# sudo systemctl start pm2-root
+```
+
+Pridanie procesu `nextjs`
+```
+$ cd www/<app-name>
+$ pm2 start npm --name "<app-name>" -- start 
+```
+
+Uloženie procesu
+```
+$ pm2 save
+```
+
+Odobratie procesu
+```
+$ pm2 delete <app-name>
+```
+
+Vylistovanie procesov
+```
+$ pm2 ls
+```
+
+Ovládanie procesov
+```
+$ pm2 start <app-name>
+$ pm2 stop <app-name>
+```
+
+Monitor
+```
+$ pm2 monit
 ```
