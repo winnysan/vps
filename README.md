@@ -318,3 +318,62 @@ Monitor
 ```
 $ pm2 monit
 ```
+
+## nastavenie DNS
+
+Typ `A`
+```
+Host: mydomain.com
+Typ: A
+Hodnota: ip-servera
+```
+
+Typ `CNAME`
+```
+Host: *.mydomain.com
+Typ: CNAME
+Hodnota: mydomain.com
+```
+
+## inštalácia Certbot
+
+```
+# sudo apt install certbot python3-certbot-nginx
+```
+
+Vygenerovanie `SSL` certifikátu
+```
+# sudo certbot --nginx -d <mydomain.com> -d <www.mydomain.com>
+```
+
+Aktualizácia konfigurácie `nginx` (nieje nutné)
+```
+# sudo nano /etc/nginx/sites-available/<mydomain.com>
+```
+
+```
+server {
+    listen 80;
+    server_name <mydomain.com> <www.mydomain.com>;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name <mydomain.com> <www.mydomain.com>;
+
+    ssl_certificate /etc/letsencrypt/live/<mydomain.com>/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/<mydomain.com>/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+Reštartovanie `nginx`
+```
+# sudo systemctl restart nginx
+```
