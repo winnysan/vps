@@ -156,6 +156,64 @@ Služba
 # sudo systemctl stop mongod
 # sudo systemctl restart mongod
 ```
+## vzdialené pripojenie do MongoDB
+
+Otvoriť shell
+```
+$ mongosh
+```
+
+Prepnúť na administrátorskú databázu
+```
+use admin
+```
+
+Vytvorenie admina
+```
+db.createUser({user:"admin", pwd:"password", roles:[{role:"root", db:"admin"}]})
+```
+
+Zapnutie autentifikácie
+```
+# sudo nano /lib/systemd/system/mongod.service
+
+ExecStart=/usr/bin/mongod --quiet --auth --config /etc/mongod.conf
+```
+
+Aktualizácia daemona a reštart MongoDB
+```
+# sudo systemctl daemon-reload
+# sudo systemctl restart mongod
+```
+
+Prihlásenie do shellu a overenie prihláseného užívateľa
+```
+mongosh -u admin -p --authenticationDatabase admin
+db.runCommand({connectionStatus : 1})
+```
+
+Povolenie na firewalle
+```
+# sudo ufw allow 27017
+# sudo ufw status
+```
+
+Pre prístup zo špecifickej IP
+```
+# sudo ufw allow from <your_other_server_ip>/32 to any port 27017
+```
+
+Zahrnutie do konfigurácie
+```
+# sudo nano /etc/mongod.conf
+
+bindIp: 0.0.0.0,<your_server_ip>
+```
+
+Reštartovanie MongoDB
+```
+sudo systemctl restart mongod
+```
 
 ## inštalácia NodeJS
 
