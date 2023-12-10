@@ -203,16 +203,26 @@ Pre prístup zo špecifickej IP
 # sudo ufw allow from <your_other_server_ip>/32 to any port 27017
 ```
 
+Zistenie IP
+```
+$ ip a | grep inet
+```
+
 Zahrnutie do konfigurácie
 ```
 # sudo nano /etc/mongod.conf
 
-bindIp: 0.0.0.0,<your_server_ip>
+bindIp: 127.0.0.1,<vps_ip>
 ```
 
 Reštartovanie MongoDB
 ```
 sudo systemctl restart mongod
+```
+
+Connection string
+```
+mongodb://username:password@ip:port/database?directConnection=true&serverSelectionTimeoutMS=2000&authSource=admin
 ```
 
 ## inštalácia NodeJS
@@ -271,6 +281,22 @@ Odinštalovanie
 ```
 # sudo snap remove node
 # sudo apt remove nodejs -y
+```
+## inštalácia WKHTMLTOPDF
+
+Zoznam verzii
+```
+https://wkhtmltopdf.org/downloads.html
+```
+
+```
+$ https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+# sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+```
+
+Fix dependecies
+```
+# sudo apt install -f
 ```
 
 ## inštalácia Git
