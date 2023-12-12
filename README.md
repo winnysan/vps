@@ -461,3 +461,32 @@ Reštartovanie `nginx`
 ```
 # sudo systemctl restart nginx
 ```
+
+## záloha databázy
+
+```
+https://www.digitalocean.com/community/tutorials/how-to-back-up-restore-and-migrate-a-mongodb-database-on-ubuntu-20-04
+```
+
+Vytvorenie adresára pre zálohu
+```
+$ sudo mkdir /var/backups/mongobackups
+```
+
+Odstránenie zálohy staršej ako 7 dní a vytvorenie novej
+```
+$ find /var/backups/mongobackups/ -mtime +7 -exec rm -rf {} \;
+
+$ sudo mongodump --username <admin> --password <password> --authenticationDatabase admin --db <database-name> --out /var/backups/mongobackups/$(date +'%m-%d-%y')
+```
+
+Pridanie do cronu
+```
+$ sudo crontab -e
+```
+
+```
+1 3 * * * find /var/backups/mongobackups/ -mtime +7 -exec rm -rf {} \;
+
+3 3 * * * mongodump --username <admin> --password <password> --authenticationDatabase admin --db <database-name> --out /var/backups/mongobackups/$(date +'\%m-\%d-\%y')
+```
