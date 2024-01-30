@@ -156,6 +156,15 @@ Služba
 # sudo systemctl stop mongod
 # sudo systemctl restart mongod
 ```
+
+Nastavenie automatického reštartu
+```
+# sudo nano /lib/systemd/system/mongod.service
+// pod Service vložiť 'Restart=always'
+
+# sudo systemctl daemon-reload
+```
+
 ## vzdialené pripojenie do MongoDB
 
 Otvoriť shell
